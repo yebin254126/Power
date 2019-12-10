@@ -28,6 +28,7 @@
         height: 100%;
         -moz-user-select:none;
         -webkit-user-select: none;
+        background-color: #eee;
     }
 
 </style>

@@ -5,7 +5,7 @@
                 <el-row>
                     <el-col :span="20">
                         <el-form-item label="用户名" prop="username">
-                            <el-input type="text" v-model="user.username"></el-input>
+                            <el-input typcleae="text" v-model="user.username"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>

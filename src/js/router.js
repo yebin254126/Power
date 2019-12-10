@@ -9,6 +9,9 @@ import  rightCom from   "../components/rights/rights"
 import  roleCom  from   "../components/roles/roles"
 import  userInfoCom from  "../components/userInfo/userInfo"
 import  logCom   from  "../components/log/log"
+import  goodsCom  from  "../components/goods/goods"
+import  simpleInfoCom from  "../components/userInfo/simpleInfo"
+import  securityInfoCom   from   "../components/userInfo/securityInfo"
 vue.use(vueRouter)
 var  router=new vueRouter({
      routes:[
@@ -22,8 +25,13 @@ var  router=new vueRouter({
                 {path:'/userList',name:'userList',component:userCom},
                 {path:'/rights',name:'rights',component:rightCom},
                 {path:'/roles',name:'roles',component:roleCom},
-                {path:'/userInfo',name:'userInfo',component:userInfoCom},
-                {path:'/log',name:'log',component:logCom}
+                {path:'/userInfo',name:'userInfo',component:userInfoCom,redirect:'/simpleInfo',
+                children: [
+                    {path:'/simpleInfo',name:'simpleInfo',component:simpleInfoCom},
+                    {path:'/securityInfo',name:'securityInfo',component:securityInfoCom}
+                ]},
+                {path:'/log',name:'log',component:logCom},
+                {path:'/goodsList',name:'goodsList',component:goodsCom}
             ]
          }
      ]

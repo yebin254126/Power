@@ -2,10 +2,15 @@
     <el-container>
         <el-aside :width="asideWidth">
             <div class="logo">
-                <el-avatar shape="square" :src="logoSrc"  :size="50">
-                </el-avatar>
-<!--                <span>Management</span>-->
+<!--                <el-avatar shape="circle" :src="logoSrc"  :size="50">-->
+<!--                </el-avatar>-->
+                <el-image
+                        style="width: 80px; height: 80px"
+                        :src="logoSrc">
+
+                </el-image>
             </div>
+<!--                <span>Management</span>-->
             <el-menu
                     router
                     background-color="#545c64"
@@ -56,10 +61,16 @@
 </template>
 
 <script>
+    import SockJS from "sockjs-client"
+    import Stomp from "stompjs"
     export default {
         name: "mainCom",
         data() {
             return {
+                path: 'http://localhost:8080/socket',
+                socket: null,
+                stompClient: null,
+                rows:[],
                 menuList: [
                     {
                         id: 1, name: '系统管理', path: '/rights', icon:'el-icon-setting', children: [
@@ -83,15 +94,48 @@
                             {id: 9, name: '权限列表', path: '/rights', children: []},
                         ]
                     },
+                    {
+                        id: 10, name: '商品管理', path: '/goods',icon:'el-icon-goods', children: [
+                            {id: 11, name: '商品列表', path: '/goodsList', children: []},
+                        ]
+                    },
                 ],
+
                 imageSrc: require('@/images/r1.jpg'),
-                logoSrc:require('@/images/logo.jpg'),
+                logoSrc:require('@/images/logo4.png'),
                 isCollapse: false,
                 collapaseIcon:'el-icon-s-unfold',
                 asideWidth: '15%',
             }
         },
         methods: {
+
+            initSocket() {
+                this.socket = new SockJS(this.path);
+                this.stompClient = Stomp.over(this.socket)
+                this.$store.commit('setStompClient',this.stompClient)
+                this.stompClient.connect({'token': 'token'},
+
+                    (frame) => {
+
+                        this.stompClient.subscribe("/topic/getData", (data) => {
+                            var s = JSON.parse(data.body)
+                            //this.chartData=s
+                             this.$store.commit('setChartRows',s)
+
+                        })
+                    }, (error) => {
+                        console.log(error)
+                    }
+                )
+
+
+            },
+            disConnect()
+            {
+                  this.stompClient.disConnect();
+            },
+
             toggleCollapase() {
                 this.isCollapse = !this.isCollapse
                 this.asideWidth = (this.isCollapse ? '5%' : '15%')
@@ -107,6 +151,10 @@
         },
         created() {
             this.$store.getters.getUserFormSessionStorage
+            this.initSocket()
+        },
+        destroyed() {
+            this.disConnect()
         }
     }
 </script>
@@ -127,7 +175,7 @@
 
     .logo
     {
-        margin: 10px 10px 20px 20px;
+        margin: 10px 10px 20px 5px;
         align-items: center;
     }
 

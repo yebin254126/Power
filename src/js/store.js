@@ -5,8 +5,11 @@ vue.use(vuex)
 
 var  store=new vuex.Store({
           state:{
-              userState:{}
+              userState:{},
+              chartRows:[],
+              stompClient:null,
           },
+
           mutations:{
               setUser(state,user)
               {
@@ -16,6 +19,14 @@ var  store=new vuex.Store({
               removeUser(state) {
                   state.userState = null
                   sessionStorage.removeItem('userState')
+              },
+              setChartRows(state,data)
+              {
+                  state.chartRows=data
+              },
+              setStompClient(state,stompClient)
+              {
+                  state.stompClient=stompClient
               }
 
           },
